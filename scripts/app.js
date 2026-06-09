@@ -5,6 +5,12 @@ let uniqueCategories = [];
 let activeCategory = 'all';
 let searchQuery = '';
 let currentSort = 'name-asc';
+let selectedUrls = []; // Track selected rows for deletion
+
+// Environmental checks for local admin mode
+const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+const API_BASE_URL = 'http://localhost:3000/api';
+let backendAvailable = false;
 
 // Constants
 const LOCAL_STORAGE_KEY = 'tools-dashboard-category';
@@ -55,10 +61,36 @@ function getStableGradientClass(toolName) {
   return `icon-grad-${index}`;
 }
 
+// Check if Express backend is running locally
+async function checkBackendStatus() {
+  if (!isLocal) return;
+  try {
+    const response = await fetch(`${API_BASE_URL}/tools`, { method: 'GET' });
+    if (response.ok) {
+      backendAvailable = true;
+    }
+  } catch (error) {
+    console.warn('Backend server is not running on port 3000. Local admin actions are disabled.');
+    backendAvailable = false;
+  }
+}
+
 // 1. Load data from JSON
 async function loadTools() {
   try {
-    const response = await fetch('datas/tools.json');
+    // Verify backend availability first
+    await checkBackendStatus();
+    
+    // Toggle Admin Toolbar display based on environment and server status
+    const adminToolbar = document.getElementById('admin-toolbar');
+    if (isLocal && backendAvailable) {
+      adminToolbar.classList.remove('hidden');
+    } else {
+      adminToolbar.classList.add('hidden');
+    }
+    
+    // Fetch data using cache buster query parameter to guarantee updates reflect instantly
+    const response = await fetch(`datas/tools.json?t=${Date.now()}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -230,12 +262,47 @@ function sortTools() {
 function renderTools() {
   const tbody = document.getElementById('tools-tbody');
   const footerInfo = document.getElementById('footer-info');
+  const headerTr = document.getElementById('table-header-tr');
   
   // Clear body
   tbody.innerHTML = '';
   
   // Update result count instantly
   footerInfo.textContent = `Showing ${filteredTools.length} of ${toolsData.length} tools`;
+  
+  // Dynamic header updates for Admin mode selection checkboxes
+  if (isLocal && backendAvailable) {
+    if (headerTr && !headerTr.querySelector('.col-select')) {
+      const selectTh = document.createElement('th');
+      selectTh.className = 'col-select';
+      selectTh.scope = 'col';
+      selectTh.innerHTML = '<input type="checkbox" id="select-all-checkbox" aria-label="Select all rows" />';
+      headerTr.insertBefore(selectTh, headerTr.firstChild);
+      
+      // Select All change handler
+      const selectAllCb = document.getElementById('select-all-checkbox');
+      selectAllCb.addEventListener('change', (e) => {
+        const checkAll = e.target.checked;
+        const checkboxes = document.querySelectorAll('.col-select input[type="checkbox"]:not(#select-all-checkbox)');
+        checkboxes.forEach(cb => {
+          cb.checked = checkAll;
+          const url = cb.getAttribute('data-url');
+          if (checkAll) {
+            if (!selectedUrls.includes(url)) selectedUrls.push(url);
+          } else {
+            selectedUrls = selectedUrls.filter(u => u !== url);
+          }
+        });
+        updateDeleteButtonState();
+      });
+    }
+  } else {
+    // Remove checkbox header if we are not in local admin mode anymore
+    if (headerTr) {
+      const existingTh = headerTr.querySelector('.col-select');
+      if (existingTh) existingTh.remove();
+    }
+  }
   
   if (filteredTools.length === 0) {
     showEmptyState(true);
@@ -256,7 +323,16 @@ function renderTools() {
     row.style.animationDelay = `${index * 0.03}s`;
     row.setAttribute('data-url', tool.url);
     
+    // Checkbox html block if admin system is active
+    const isChecked = selectedUrls.includes(tool.url);
+    const checkboxTd = `
+      <td class="col-select">
+        <input type="checkbox" class="row-checkbox" data-url="${tool.url}" ${isChecked ? 'checked' : ''} aria-label="Select row" />
+      </td>
+    `;
+    
     row.innerHTML = `
+      ${(isLocal && backendAvailable) ? checkboxTd : ''}
       <td class="col-num"><span class="row-number">${displayedIndex}</span></td>
       <td class="col-icon">
         <div class="tool-icon ${gradientClass}">
@@ -284,6 +360,7 @@ function renderTools() {
   });
   
   tbody.appendChild(fragment);
+  updateDeleteButtonState();
 }
 
 // 7. Clipboard Copy Link Action
@@ -345,6 +422,7 @@ function clearAllFilters() {
   searchQuery = '';
   activeCategory = 'all';
   currentSort = 'name-asc';
+  selectedUrls = []; // Clear selections
   
   // Sync HTML elements
   const searchInput = document.getElementById('search-input');
@@ -352,9 +430,6 @@ function clearAllFilters() {
   
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) sortSelect.value = 'name-asc';
-  
-  // Clear localStorage
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
   
   // Close dropdown if open
   const dropdownBtn = document.getElementById('filter-dropdown-btn');
@@ -367,10 +442,72 @@ function clearAllFilters() {
   // Reset active label and rebuild menu items
   renderCategoryDropdown();
   
+  // Uncheck select-all header checkbox
+  const selectAllCb = document.getElementById('select-all-checkbox');
+  if (selectAllCb) selectAllCb.checked = false;
+  
   saveState();
   filterTools();
   sortTools();
   renderTools();
+}
+
+// Show Toast Floating Notifications
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  
+  const icon = type === 'success' ? successIconSvg : `
+    <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+  `;
+  
+  toast.innerHTML = `
+    ${icon}
+    <span class="toast-message">${message}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  // Trigger slide-in
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 15);
+  
+  // Auto dismiss after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 3000);
+}
+
+// Update state of Delete Selected button based on check counts
+function updateDeleteButtonState() {
+  if (!isLocal || !backendAvailable) return;
+  
+  const deleteBtn = document.getElementById('delete-selected-btn');
+  const countSpan = document.getElementById('selected-count');
+  
+  if (!deleteBtn) return;
+  
+  const count = selectedUrls.length;
+  countSpan.textContent = count;
+  
+  if (count > 0) {
+    deleteBtn.removeAttribute('disabled');
+    deleteBtn.classList.remove('disabled');
+  } else {
+    deleteBtn.setAttribute('disabled', 'true');
+    deleteBtn.classList.add('disabled');
+  }
 }
 
 // Event Listeners Setup
@@ -384,6 +521,132 @@ function initializeEvents() {
   // Dropdown Toggle elements
   const dropdownBtn = document.getElementById('filter-dropdown-btn');
   const dropdownMenu = document.getElementById('filter-dropdown-menu');
+  
+  // Modal Elements
+  const addModal = document.getElementById('add-tool-modal');
+  const addBtn = document.getElementById('add-tool-btn');
+  const closeAddX = document.getElementById('close-modal-x-btn');
+  const cancelAddBtn = document.getElementById('cancel-add-btn');
+  const addForm = document.getElementById('add-tool-form');
+  
+  const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+  const deleteBtn = document.getElementById('delete-selected-btn');
+  const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+  const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+  
+  // 1. Add Tool Modal Toggling & Submit handlers
+  addBtn.addEventListener('click', () => {
+    addModal.classList.remove('hidden');
+    document.getElementById('tool-name-input').focus();
+  });
+  
+  const closeAddModal = () => {
+    addModal.classList.add('hidden');
+    addForm.reset();
+  };
+  
+  closeAddX.addEventListener('click', closeAddModal);
+  cancelAddBtn.addEventListener('click', closeAddModal);
+  
+  addForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const nameVal = document.getElementById('tool-name-input').value.trim();
+    const descVal = document.getElementById('tool-description-input').value.trim();
+    const catVal = document.getElementById('tool-category-input').value.trim();
+    const urlVal = document.getElementById('tool-url-input').value.trim();
+    
+    // Verification validation checks
+    if (!nameVal || !descVal || !catVal || !urlVal) {
+      showToast('All fields marked with an asterisk (*) are required.', 'error');
+      return;
+    }
+    
+    // URL format checks
+    try {
+      new URL(urlVal);
+    } catch (_) {
+      showToast('Please enter a valid absolute URL (e.g. https://www.example.com).', 'error');
+      return;
+    }
+    
+    // Client-side duplicate URL check
+    const duplicate = toolsData.some(tool => tool.url.toLowerCase() === urlVal.toLowerCase());
+    if (duplicate) {
+      showToast('Duplicate URL: A tool with this URL already exists.', 'error');
+      return;
+    }
+    
+    // Submit POST request to backend
+    try {
+      const response = await fetch(`${API_BASE_URL}/tools/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nameVal,
+          description: descVal,
+          category: catVal,
+          url: urlVal
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        showToast(result.message || '✓ Tool Added Successfully', 'success');
+        closeAddModal();
+        await loadTools(); // Reload and refresh
+      } else {
+        showToast(result.message || 'Server rejected request.', 'error');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Network Error: Could not connect to the local admin server.', 'error');
+    }
+  });
+  
+  // 2. Delete Selected Modal Toggling & Submit handlers
+  deleteBtn.addEventListener('click', () => {
+    if (selectedUrls.length === 0) return;
+    
+    document.getElementById('delete-count-text').textContent = selectedUrls.length;
+    deleteConfirmModal.classList.remove('hidden');
+  });
+  
+  const closeDeleteModal = () => {
+    deleteConfirmModal.classList.add('hidden');
+  };
+  
+  cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+  
+  confirmDeleteBtn.addEventListener('click', async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tools/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls: selectedUrls })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        showToast(result.message || `✓ ${selectedUrls.length} Tools Deleted`, 'success');
+        
+        // Reset state
+        selectedUrls = [];
+        const selectAllCb = document.getElementById('select-all-checkbox');
+        if (selectAllCb) selectAllCb.checked = false;
+        
+        closeDeleteModal();
+        await loadTools(); // Reload lists
+      } else {
+        showToast(result.message || 'Server rejected delete request.', 'error');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Network Error: Could not connect to the local admin server.', 'error');
+    }
+  });
   
   // Dropdown toggle trigger
   dropdownBtn.addEventListener('click', (e) => {
@@ -444,6 +707,25 @@ function initializeEvents() {
   
   // Empty state clear filter
   emptyStateClearBtn.addEventListener('click', clearAllFilters);
+  
+  // Checkbox row toggles via delegation on tbody
+  tbody.addEventListener('change', (e) => {
+    const cb = e.target.closest('.row-checkbox');
+    if (!cb) return;
+    
+    const url = cb.getAttribute('data-url');
+    if (cb.checked) {
+      if (!selectedUrls.includes(url)) {
+        selectedUrls.push(url);
+      }
+    } else {
+      selectedUrls = selectedUrls.filter(u => u !== url);
+      // Uncheck select-all header check if any row is manually deselected
+      const selectAllCb = document.getElementById('select-all-checkbox');
+      if (selectAllCb) selectAllCb.checked = false;
+    }
+    updateDeleteButtonState();
+  });
   
   // Dynamic action buttons click handler via Event Delegation (Performance)
   tbody.addEventListener('click', (e) => {

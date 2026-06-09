@@ -57,25 +57,52 @@ Built with **pure Vanilla HTML, CSS, and JavaScript** — zero frameworks, zero 
 
 ## 🚀 Local Setup & Deployment
 
-Since the dashboard fetches its data dynamically via the browser's Fetch API, running it requires a local web server (to avoid browser CORS blocks caused by opening via `file://`).
+Since the dashboard fetches its data dynamically via the browser's Fetch API, running it requires a local web server (to avoid browser CORS blocks caused by opening via `file://`). Additionally, the dashboard features a **Local Admin System** that is activated only in local environments when running the Node.js backend.
 
-### 1. Run via VS Code Live Server (Recommended)
+### 1. Run the Local Admin Backend (Node.js)
+To enable the capability to add or delete tools directly from the dashboard:
+1. Open the project folder in your terminal.
+2. Install the backend dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the local server on `http://localhost:3000`:
+   ```bash
+   npm start
+   ```
+   *(Alternatively, run `npm run dev` for auto-restarts via `--watch` mode during development).*
+
+### 2. Run the Dashboard Frontend
+You can run the frontend client using any local web server. The backend is configured with CORS to allow cross-origin requests from local dev ports.
+
+#### Option A: Run via VS Code Live Server (Recommended)
 1. Install the **Live Server** extension in Visual Studio Code.
 2. Open the project folder in VS Code.
 3. Click **"Go Live"** in the bottom status bar.
 4. Your browser will open the app on `http://127.0.0.1:5500/index.html`.
 
-### 2. Run via Node.js
-If you have Node.js installed, you can launch a server instantly from your terminal:
+#### Option B: Run via HTTP-Server
+Run a static server from a separate terminal:
 ```bash
-# Install static server globally (or run ad-hoc)
 npx http-server -p 8000
 ```
 Open `http://localhost:8000` in your web browser.
 
-### 3. Deploying to GitHub Pages
+---
+
+## 🔒 Environment Rules & Security
+
+*   **Local Development:**
+    When the dashboard is opened on `localhost` or `127.0.0.1`, and the local backend server on port 3000 is active, the **Local Admin Mode** is automatically enabled. An admin toolbar and checkbox selections will appear, allowing you to add new tools (with duplicate checking) or delete selected ones. The changes are saved directly into `datas/tools.json`.
+*   **Offline/Fallback Mode:**
+    If you are running the dashboard locally but the Node.js server is stopped, the dashboard will fall back gracefully to reader-only mode, and the admin toolbar remains hidden.
+*   **Production Deployment (GitHub Pages):**
+    When deployed to a public server (like GitHub Pages), all admin actions, checkbox columns, buttons, and modals are **completely hidden and disabled**. Public visitors will only see the read-only dashboard.
+
+### Deploying to GitHub Pages
 The project is static and pre-configured for instant deployment to **GitHub Pages**:
 1. Push this repository to GitHub.
 2. Go to your repository's **Settings** > **Pages**.
 3. Under **Build and deployment**, set the source to **Deploy from a branch** and select your main/master branch.
 4. Click **Save**. Your site will be live at `https://<username>.github.io/<repository-name>/`.
+

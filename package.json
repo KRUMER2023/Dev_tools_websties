@@ -1,0 +1,22 @@
+{
+  "name": "dev-tools-dashboard",
+  "version": "1.0.0",
+  "description": "A premium SaaS-style Tool Discovery Dashboard with a local admin management backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "dashboard",
+    "developer",
+    "tools",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

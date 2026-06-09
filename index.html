@@ -88,12 +88,38 @@
       </div>
     </section>
 
+    <!-- Admin Toolbar (Only visible locally during development) -->
+    <div id="admin-toolbar" class="admin-toolbar hidden">
+      <div class="admin-toolbar-content">
+        <div class="admin-status-wrapper">
+          <span class="pulse-indicator"></span>
+          <span class="admin-status-label">Local Admin Mode</span>
+        </div>
+        <div class="admin-actions">
+          <button id="add-tool-btn" class="admin-btn add-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="admin-btn-icon">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Tool
+          </button>
+          <button id="delete-selected-btn" class="admin-btn delete-btn disabled" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="admin-btn-icon">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Delete Selected (<span id="selected-count">0</span>)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Tools Grid/Table Section -->
     <main class="table-card">
       <div class="table-responsive-wrapper">
         <table class="tools-table" id="tools-table-element">
           <thead>
-            <tr>
+            <tr id="table-header-tr">
               <th scope="col" class="col-num">#</th>
               <th scope="col" class="col-icon">Icon</th>
               <th scope="col" class="col-name">Name</th>
@@ -130,6 +156,58 @@
     </main>
     
   </div>
+
+  <!-- Add Tool Modal (Visible on Add Tool trigger) -->
+  <div id="add-tool-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-card-title">Add New Web Tool</h2>
+        <button class="modal-close-btn" id="close-modal-x-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="add-tool-form" autocomplete="off" novalidate>
+        <div class="form-group">
+          <label for="tool-name-input">Tool Name <span class="required-indicator">*</span></label>
+          <input type="text" id="tool-name-input" placeholder="e.g. Raycast" required />
+        </div>
+        <div class="form-group">
+          <label for="tool-description-input">Description <span class="required-indicator">*</span></label>
+          <textarea id="tool-description-input" rows="3" placeholder="e.g. An extensible launcher that lets you control your tools..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="tool-category-input">Category <span class="required-indicator">*</span></label>
+          <input type="text" id="tool-category-input" placeholder="e.g. Utility" required />
+        </div>
+        <div class="form-group">
+          <label for="tool-url-input">URL <span class="required-indicator">*</span></label>
+          <input type="url" id="tool-url-input" placeholder="e.g. https://www.raycast.com" required />
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel-add-btn" class="modal-btn cancel-btn">Cancel</button>
+          <button type="submit" id="save-tool-btn" class="modal-btn save-btn">Save Tool</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Selected Confirmation Modal -->
+  <div id="delete-confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+    <div class="modal-card confirm-card">
+      <div class="modal-header">
+        <h2 id="delete-title" class="modal-card-title delete-title">Confirm Delete</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="delete-count-text">0</strong> selected tools?</p>
+        <p class="modal-warning-text">This action will modify your JSON database file directly and cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel-delete-btn" class="modal-btn cancel-btn">Cancel</button>
+        <button type="button" id="confirm-delete-btn" class="modal-btn delete-confirm-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Floating Container -->
+  <div id="toast-container" class="toast-container"></div>
 
   <!-- Main Application Script -->
   <script src="scripts/app.js"></script>

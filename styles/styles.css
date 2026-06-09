@@ -991,3 +991,453 @@ body {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   Local Admin System Styles
+   ========================================================================== */
+
+/* Admin Toolbar */
+.admin-toolbar {
+  background: rgba(255, 154, 158, 0.02);
+  border: 1px dashed rgba(255, 154, 158, 0.22);
+  border-radius: 12px;
+  padding: 10px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.admin-toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #ff9a9e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff9a9e;
+  animation: pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(255, 154, 158, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(255, 154, 158, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(255, 154, 158, 0);
+  }
+}
+
+.admin-status-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ff9a9e;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-btn-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.admin-btn.add-btn {
+  background: var(--primary-gradient);
+  color: #1c0e10;
+  box-shadow: 0 2px 8px rgba(255, 154, 158, 0.15);
+}
+
+.admin-btn.add-btn:hover {
+  box-shadow: 0 0 14px rgba(255, 154, 158, 0.35);
+  transform: translateY(-1px);
+}
+
+.admin-btn.delete-btn {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.admin-btn.delete-btn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.12);
+  transform: translateY(-1px);
+}
+
+.admin-btn.delete-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.01);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.25);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Custom Checkbox columns inside the table */
+.col-select {
+  width: 4%;
+  text-align: center;
+}
+
+.col-select input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.col-select input[type="checkbox"]:hover {
+  border-color: rgba(255, 154, 158, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.col-select input[type="checkbox"]:checked {
+  background: var(--primary-gradient);
+  border-color: transparent;
+  box-shadow: 0 0 8px rgba(255, 154, 158, 0.4);
+}
+
+.col-select input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  width: 3.5px;
+  height: 7px;
+  border-right: 2px solid #1c0e10;
+  border-bottom: 2px solid #1c0e10;
+  transform: rotate(45deg) translate(-0.5px, -0.5px);
+}
+
+/* Modals Overlay & Modals Content */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.hidden {
+  display: none !important;
+}
+
+.modal-card {
+  background: rgba(13, 13, 15, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 154, 158, 0.05);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-card.confirm-card {
+  max-width: 400px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.modal-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.modal-card-title.delete-title {
+  color: #f87171;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #8e8e93;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.18s;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.required-indicator {
+  color: #ff9a9e;
+  margin-left: 2px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.22s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: rgba(255, 154, 158, 0.35);
+  box-shadow: 0 0 12px rgba(255, 154, 158, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+  color: #a1a1aa;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.modal-warning-text {
+  color: rgba(239, 68, 68, 0.75);
+  font-size: 0.78rem;
+  margin-top: 8px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  transition: all 0.2s;
+}
+
+.modal-btn.cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8e8e93;
+}
+
+.modal-btn.cancel-btn:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.modal-btn.save-btn {
+  background: var(--primary-gradient);
+  color: #1c0e10;
+  box-shadow: 0 2px 8px rgba(255, 154, 158, 0.15);
+}
+
+.modal-btn.save-btn:hover {
+  box-shadow: 0 0 14px rgba(255, 154, 158, 0.35);
+  transform: translateY(-1px);
+}
+
+.modal-btn.delete-confirm-btn {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
+
+.modal-btn.delete-confirm-btn:hover {
+  background: #dc2626;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Toast Floating Notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 320px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(13, 13, 15, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-success {
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.toast-success .toast-icon {
+  color: #4ade80;
+}
+
+.toast-error {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.toast-error .toast-icon {
+  color: #f87171;
+}
+
+.toast-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Responsive fixes for Admin elements */
+@media (max-width: 900px) {
+  .admin-toolbar-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .admin-actions {
+    width: 100%;
+  }
+  
+  .admin-btn {
+    flex: 1;
+    justify-content: center;
+    height: 36px;
+  }
+  
+  /* Selection Checkboxes placement inside cards on mobile */
+  .tools-table tbody tr {
+    grid-template-areas:
+      "select name"
+      "icon name"
+      "category category"
+      "desc desc"
+      "link link";
+    grid-template-columns: 42px 1fr;
+  }
+  
+  .tools-table tbody tr td.col-select {
+    grid-area: select;
+    text-align: left;
+    margin-bottom: 2px;
+    align-self: center;
+  }
+}
