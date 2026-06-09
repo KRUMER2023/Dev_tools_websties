@@ -59,7 +59,18 @@ Built with **pure Vanilla HTML, CSS, and JavaScript** — zero frameworks, zero 
 
 Since the dashboard fetches its data dynamically via the browser's Fetch API, running it requires a local web server (to avoid browser CORS blocks caused by opening via `file://`). Additionally, the dashboard features a **Local Admin System** that is activated only in local environments when running the Node.js backend.
 
-### 1. Run the Local Admin Backend (Node.js)
+### ⚡ One-Click Startup (Windows)
+Double-click **[start.bat](file:///e:/GIT/Dev_tools_websties/start.bat)** in the project root. This will automatically:
+1. Start the Node.js admin backend server on port 3000.
+2. Start the local frontend server on port 8000.
+3. Open `http://localhost:8000` in your default browser.
+
+---
+
+### Manual Setup Steps
+If you prefer to start them manually:
+
+#### 1. Run the Local Admin Backend (Node.js)
 To enable the capability to add or delete tools directly from the dashboard:
 1. Open the project folder in your terminal.
 2. Install the backend dependencies:
