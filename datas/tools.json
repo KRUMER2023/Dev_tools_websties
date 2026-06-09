@@ -1,0 +1,64 @@
+{
+  "Tools": [
+    {
+      "name": "Godly",
+      "description": "Can be use to take insperation for website and pages. having many reference and templates.",
+      "category": "Website Reference",
+      "url": "https://godly.website/"
+    },
+    {
+      "name": "Raycast",
+      "description": "An extensible launcher that lets you control your tools, search, and run commands instantly.",
+      "category": "Utility",
+      "url": "https://www.raycast.com/"
+    },
+    {
+      "name": "Linear",
+      "description": "The new standard for modern software development. Streamline issues, sprints, and product roadmaps.",
+      "category": "Project Management",
+      "url": "https://linear.app/"
+    },
+    {
+      "name": "Vercel",
+      "description": "Develop, preview, and ship websites with speed. Platform for frontend developers and modern frameworks.",
+      "category": "Hosting",
+      "url": "https://vercel.com/"
+    },
+    {
+      "name": "Supabase",
+      "description": "The open source Firebase alternative. Postgres database, authentication, instant APIs, Edge Functions.",
+      "category": "Backend",
+      "url": "https://supabase.com/"
+    },
+    {
+      "name": "Clerk",
+      "description": "More than just sign-in. Complete user management suite built for React, Next.js, and the modern web.",
+      "category": "Authentication",
+      "url": "https://clerk.com/"
+    },
+    {
+      "name": "Resend",
+      "description": "Email API for developers. Deliver beautiful transactional and marketing emails without the complexity.",
+      "category": "Email",
+      "url": "https://resend.com/"
+    },
+    {
+      "name": "Framer",
+      "description": "Design and publish stunning interactive websites. High-fidelity layouts, animations, and responsive components.",
+      "category": "Design Tools",
+      "url": "https://framer.com/"
+    },
+    {
+      "name": "Midjourney",
+      "description": "An independent research lab exploring new mediums of thought and expanding the imaginative powers of the human species.",
+      "category": "AI Tools",
+      "url": "https://www.midjourney.com/"
+    },
+    {
+      "name": "Figma",
+      "description": "The leading collaborative interface design tool. Co-create layouts, prototypes, and design systems in real time.",
+      "category": "Design Tools",
+      "url": "https://figma.com/"
+    }
+  ]
+}

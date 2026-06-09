@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover and explore premium developer tools, websites, and resources in a modern SaaS dashboard interface.">
+  <title>Tools Dashboard</title>
+  <!-- Google Fonts: Plus Jakarta Sans for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <!-- Ambient background glow decoration -->
+  <div class="ambient-glow"></div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    
+    <!-- Header Section -->
+    <header class="dashboard-header">
+      <div class="logo-wrapper">
+        <div class="logo-box">
+          <svg class="sparkles-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L10.088 8.813C9.97233 9.16568 9.69268 9.44533 9.34 9.561L3.527 11.473C3.129 11.604 3.129 12.17 3.527 12.301L9.34 14.213C9.69268 14.3287 9.97233 14.6083 10.088 14.961L12 20.773C12.131 21.171 12.697 21.171 12.828 20.773L14.74 14.961C14.8557 14.6083 15.1353 14.3287 15.488 14.213L21.301 12.301C21.699 12.17 21.699 11.604 21.301 11.473L15.488 9.561C15.1353 9.44533 14.8557 9.16568 14.74 8.813L12.828 3C12.697 2.602 12.131 2.602 12 3Z" fill="currentColor"/>
+            <path d="M5.5 3L5.833 3.813C5.892 3.951 6.002 4.061 6.14 4.12L6.953 4.453C7.091 4.512 7.091 4.708 6.953 4.767L6.14 5.1L5.833 5.913C5.774 6.051 5.578 6.051 5.519 5.913L5.212 5.1L4.399 4.767C4.261 4.708 4.261 4.512 4.399 4.453L5.212 4.12C5.35 4.061 5.46 3.951 5.519 3.813L5.5 3Z" fill="currentColor" opacity="0.6"/>
+            <path d="M18.5 17L18.833 17.813C18.941 18.068 19.145 18.272 19.4 18.38L20.213 18.713C20.468 18.821 20.468 19.179 20.213 19.287L19.4 19.62C19.145 19.728 18.941 19.932 18.833 20.187L18.5 21C18.392 21.255 18.034 21.255 17.926 21L17.593 20.187C17.485 19.932 17.281 19.728 17.026 19.62L16.213 19.287C15.958 19.179 15.958 18.821 16.213 18.713L17.026 18.38C17.281 18.272 17.485 18.068 17.593 17.813L17.926 17Z" fill="currentColor" opacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="header-text">
+        <h1 class="header-title">Tools Dashboard</h1>
+        <p class="header-subtitle">Discover and explore useful web tools and resources.</p>
+      </div>
+    </header>
+
+    <!-- Filters & Search Section -->
+    <section class="filters-panel">
+      <div class="category-filter-container">
+        <div class="filter-header-row">
+          <span class="filter-label">Filter by Category</span>
+          <button id="clear-all-btn" class="clear-all-btn" title="Reset all filters, search, and sorting">Clear All</button>
+        </div>
+        <div class="filter-dropdown-wrapper">
+          <button id="filter-dropdown-btn" class="filter-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+            <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span id="active-category-label">All Categories</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="filter-dropdown-menu" class="filter-dropdown-menu hidden">
+            <!-- Dynamically populated category menu items -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls-right">
+        <div class="search-container">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" placeholder="Search by name or URL..." aria-label="Search tools by name or URL" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="sort-container">
+          <div class="sort-select-wrapper">
+            <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="12" x2="14" y2="12"></line>
+              <line x1="4" y1="18" x2="8" y2="18"></line>
+            </svg>
+            <select id="sort-select" aria-label="Sort tools">
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="category-asc">Category (A-Z)</option>
+              <option value="category-desc">Category (Z-A)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tools Grid/Table Section -->
+    <main class="table-card">
+      <div class="table-responsive-wrapper">
+        <table class="tools-table" id="tools-table-element">
+          <thead>
+            <tr>
+              <th scope="col" class="col-num">#</th>
+              <th scope="col" class="col-icon">Icon</th>
+              <th scope="col" class="col-name">Name</th>
+              <th scope="col" class="col-category">Category</th>
+              <th scope="col" class="col-desc">Description</th>
+              <th scope="col" class="col-link">Link</th>
+            </tr>
+          </thead>
+          <tbody id="tools-tbody">
+            <!-- Dynamically populated tool rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State Container -->
+      <div id="empty-state" class="empty-state hidden">
+        <div class="empty-icon-wrapper">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </div>
+        <h3>No tools found</h3>
+        <p>Try adjusting your search or filter selection.</p>
+        <button id="clear-filters-btn" class="reset-btn">Clear Filters</button>
+      </div>
+
+      <!-- Footer Section (Count) -->
+      <footer class="table-footer">
+        <div class="footer-info" id="footer-info">
+          Showing 0 of 0 tools
+        </div>
+      </footer>
+    </main>
+    
+  </div>
+
+  <!-- Main Application Script -->
+  <script src="scripts/app.js"></script>
+</body>
+</html>
